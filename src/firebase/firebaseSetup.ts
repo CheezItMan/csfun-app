@@ -1,26 +1,17 @@
 import * as firebase from 'firebase/app';
 import 'firebase/auth';
-import withFirebaseAuth from 'react-with-firebase-auth';
 
 
 import { config } from './config';
 
-export const firebaseApp = firebase.initializeApp(config);
+export const provider = new firebase.auth.GithubAuthProvider();
 
-export const firebaseAppAuth = firebaseApp.auth();
+provider.addScope('read:user');
+provider.addScope('')
 
-// in case we want to add different auth providers
-export const providers = {
-  githubProvider: new firebase.auth.GithubAuthProvider()
-}
+firebase.initializeApp(config);
 
-providers.githubProvider.addScope('read:user');
-providers.githubProvider.addScope('')
+export const db = firebase.firestore;
 
 // Adding custom parameters to github
 // providers.githubProvider.setCustomParameters
-
-export const createComponentWithAuth = withFirebaseAuth({
-  providers,
-  firebaseAppAuth,
-});

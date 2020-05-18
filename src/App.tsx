@@ -1,25 +1,41 @@
-import React from 'react';
-import { WrappedComponentProps } from 'react-with-firebase-auth';
+import React, { useState } from 'react';
+import * as firebase from 'firebase/app';
 
-import { createComponentWithAuth } from './firebase/firebaseSetup';
-
+import { provider } from './firebase/firebaseSetup';
 import './App.css';
 
-const App = ({
-  signInWithGithub,
-  signOut,
-  setError,
-  user,
-  error,
-  loading,
-}: WrappedComponentProps) => {
-  if (error) {
-    console.log(error);
-  }
-  if (user) {
-    console.log(user);
-    console.log(user.providerData[0]);
-    console.log(user.refreshToken);
+interface ApplicationUser extends firebase.User {
+  credential: firebase.auth.AuthCredential,
+}
+
+interface GithubAuthUser extends firebase.User {
+  credential: String,
+}
+
+const App = () => {
+
+  const [user, setUser] = useState<ApplicationUser | undefined>(undefined);
+
+  const login = () => {
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        if (result && result.credential) {
+          const credential = result.credential;
+          console.log(credential);
+          Object.keys(credential).forEach((key) => {
+            console.log('key = ', key);
+          });
+
+          const newUser = result.user;
+          if (newUser) {
+            const newUserObject = {
+              ...newUser,
+              credential,
+            };
+            setUser(newUserObject);
+          }
+        }
+      })
   }
 
   return (
@@ -32,17 +48,12 @@ const App = ({
       </header>
       <main>
         {
-          user ? <button onClick={signOut}>Sign Out</button>
-            : <button onClick={signInWithGithub}>Sign in with Github</button>
-        }
-
-        {
-          loading && <h2>Loading...</h2>
+          user ? <button onClick={() => { }}>Sign Out</button>
+            : <button onClick={login}>Sign in with Github</button>
         }
       </main>
     </div>
   );
 }
 
-/* Higher Order Component wrapping App */
-export default createComponentWithAuth(App);
+export default App;
