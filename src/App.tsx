@@ -1,26 +1,48 @@
 import React from 'react';
-import logo from './logo.svg';
+import { WrappedComponentProps } from 'react-with-firebase-auth';
+
+import { createComponentWithAuth } from './firebase/firebaseSetup';
+
 import './App.css';
 
-function App() {
+const App = ({
+  signInWithGithub,
+  signOut,
+  setError,
+  user,
+  error,
+  loading,
+}: WrappedComponentProps) => {
+  if (error) {
+    console.log(error);
+  }
+  if (user) {
+    console.log(user);
+    console.log(user.providerData[0]);
+    console.log(user.refreshToken);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {
+          user ? <h1>Hello, {user.displayName} </h1>
+            : <h1>Please log in</h1>
+        }
       </header>
+      <main>
+        {
+          user ? <button onClick={signOut}>Sign Out</button>
+            : <button onClick={signInWithGithub}>Sign in with Github</button>
+        }
+
+        {
+          loading && <h2>Loading...</h2>
+        }
+      </main>
     </div>
   );
 }
 
-export default App;
+/* Higher Order Component wrapping App */
+export default createComponentWithAuth(App);
