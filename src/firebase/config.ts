@@ -1,4 +1,15 @@
 
+export interface FirebaseConfig {
+  apiKey: String,
+  authDomain: String,
+  databaseURL: String,
+  projectId: String,
+  storageBucket: String,
+  messagingSenderId: String,
+  appId: String,
+  measurementId: String,
+}
+
 export const config = {
   apiKey: "AIzaSyABDHUH-fgDAeNmkpxgvRqP82i4x-scoJ4",
   authDomain: "fir-auth-b42b4.firebaseapp.com",
