@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 
 import { UserContextType, UserContext } from '../context/UserContext';
 import { githubProvider } from '../firebase/githubProvider';
@@ -15,14 +15,14 @@ export const useGithubAuth = () => {
     firebase.auth().signInWithPopup(githubProvider)
       .then((result) => {
         if (result && result.credential) {
-          const { credential } = result;
+          const credential = result.credential as firebase.auth.OAuthCredential;
 
           const { user } = result;
           if (user) {
             const newUserState = {
               ...userContext,
               user,
-              credential,
+              accessToken: credential.accessToken ? credential.accessToken : null,
             };
             userContext.setUserContext(newUserState);
           }
@@ -42,18 +42,6 @@ export const useGithubAuth = () => {
     }).catch(function (error) {
       // An error happened.
       console.log('User Logout failed');
-    });
-  }
-
-  const onAuthStateChange = (callback: UserStateCallback) => {
-    return firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        callback({
-          user,
-          accessToken: userContext.accessToken,
-          setUserContext: userContext.setUserContext,
-        });
-      }
     });
   }
 

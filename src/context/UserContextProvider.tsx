@@ -8,12 +8,15 @@ type UserContextProps = {
 
 }
 
+
+const userData: UserContextType = {
+  user: null,
+  accessToken: null,
+  setUserContext: (userInfo: UserContextType) => { }
+}
+
 export const UserContextProvider: FunctionComponent<UserContextProps> = ({ children }) => {
-  const userData: UserContextType = {
-    user: null,
-    accessToken: null,
-    setUserContext: (userInfo: UserContextType) => { }
-  }
+
   const [userState, setUserState] = useState(userData);
 
   // This feels like a kludge

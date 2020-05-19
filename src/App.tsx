@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import * as firebase from 'firebase/app';
 
 import { useGithubAuth } from './hooks/useGithubAuth'
@@ -13,6 +13,7 @@ const App = () => {
   const { userContext, login, logout } = useGithubAuth();
   const { user } = userContext;
 
+  if (userContext.accessToken) console.log(userContext.accessToken)
 
   return (
     <div className="App">
@@ -24,9 +25,11 @@ const App = () => {
       </header>
       <main>
         {
-          user ? <button onClick={() => { }}>Sign Out</button>
+          user ? <button onClick={logout}>Sign Out</button>
             : <button onClick={login}>Sign in with Github</button>
         }
+
+
       </main>
     </div>
   );

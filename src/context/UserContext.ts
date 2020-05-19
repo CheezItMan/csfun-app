@@ -7,7 +7,7 @@ export interface UserDataType {
 
 export interface UserContextType extends UserDataType {
 
-  setUserContext(data: UserDataType): void,
+  setUserContext(data: UserContextType): void,
 }
 
 const initialContext: UserContextType = {
